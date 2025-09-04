@@ -1,0 +1,8 @@
+[deps]
+BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
+NeuralEstimators = "38f6df31-6b4a-4144-b2af-7ace2da57606"
+RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
+Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
+cuDNN = "02a925ec-e4fe-4b08-9a7e-0d78e3d38ccd"
