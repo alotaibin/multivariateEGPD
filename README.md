@@ -48,9 +48,9 @@ In general, the fast training of neural networks requires GPUs. However, the cod
 
 First, download this repository and navigate to its top-level directory within terminal.
 
-The repository is organised into folders containing source code (`src`), intermediate objects generated from the source code (`intermediates`), and figures (`img`). 
+The repository is organised into folders containing source code (`R`), intermediate objects generated from the source code (`intermediates`), and figures (`img`). 
 
-The replication script is `run.sh`, invoked using `bash run.sh` from the top level of this repository. The replication script will automatically train the neural networks, generate estimates/samples from both the neural and likelihood-based estimators/samplers, and populate the `img` folder with the figures and results of the manuscript.
+The replication script is `simulationstudy.sh`, invoked using `bash simulationstudy.sh` from the top level of this repository. The replication script will automatically train the neural networks, generate estimates/samples from both the neural and likelihood-based estimators/samplers, and populate the `img` folder with the figures and results of the manuscript.
 
 Note that the nature of our experiments means that the run time for reproducing the results of the manuscript can be moderate (on the order of several hours). 
 
