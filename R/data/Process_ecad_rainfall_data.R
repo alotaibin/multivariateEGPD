@@ -1,30 +1,4 @@
 ##############################################################################
-## Load neural estimator
-##############################################################################
-
-library("NeuralEstimators")
-library("JuliaConnectoR")
-Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.") 
-Sys.setenv(JULIA_BINDIR = "/Applications/Julia-1.9.app/Contents/Resources/julia/bin")
-juliaEval('using NeuralEstimators, Flux')
-source("R/Architecture.R")
-
-# Load the trained estimator
-loadstate(NPE, file.path("intermediates", "NPE.bson"))
-
-# Dummy data 
-Y <- matrix(runif(2 * 1000), nrow = 2)
-
-# Sample from the posterior given Y
-samples <- sampleposterior(NPE, Y)[[1]]
-apply(samples, 1, median)
-apply(samples, 1, quantile, c(0.025, 0.975))
-
-##############################################################################
-## Downloading and Processing ECAD Rainfall Data:
-##############################################################################
-
-##############################################################################
 ## Downloading and Processing ECAD Rainfall Data:
 ##############################################################################
 
@@ -45,9 +19,6 @@ unzip("ECA_blend_rr.zip", exdir = "ECA_blend_rr")      # extract all station fil
 files <- list.files("ECA_blend_rr_data/ECA_blend_rr", recursive = TRUE)
 length(grep("^RR_STAID0.*\\.txt$", files))            # 16320 should be ~17125
 #head(grep("^RR_STAID0.*\\.txt$", files, value = TRUE), 10)
-
-
-
 
 ##############################################################################
 ## Build & filter ECAD NL rainfall data, then extract 3 stations
@@ -417,95 +388,3 @@ new_sel <- c(sel_cols[1], sel_cols[2], best)
 new_sel
 
 #################################################################################
-#################################################################################
-
-# # 1. Read the raw daily-by-station CSV
-# raw_df <- read.csv(
-#   "data-stations-NL-RR.txt",
-#   stringsAsFactors = FALSE,
-#   check.names      = FALSE
-# )
-#
-# # 2. Extract the two station vectors
-# x <- raw_df[["S2357"]]
-# z <- raw_df[["S19208"]]
-#
-# # 3. Quick length check
-# cat("Length of each series:\n")
-# cat("S2357:", length(x), "\n")
-# cat("S19208:", length(z), "\n\n")
-#
-# # 4. Bit-for-bit identical?
-# identical_xy <- identical(x, z)
-# cat("identical(x, z)?", identical_xy, "\n")
-#
-# # 5. Treat NA==NA as equal, too
-# same_vec <- (x == z) | (is.na(x) & is.na(z))
-# all_same  <- all(same_vec, na.rm = TRUE)
-# cat("all(x == z, treating NA==NA)?", all_same, "\n\n")
-#
-# # 6. If they differ, show first few mismatches
-# if (!all_same) {
-#   diffs <- which(!same_vec)
-#   head(diffs, 10)  # index positions of first up to 10 differences
-#   diff_tbl <- data.frame(
-#     row      = head(diffs, 10),
-#     date     = raw_df$day[head(diffs, 10)],
-#     S2357    = x[head(diffs, 10)],
-#     S19208   = z[head(diffs, 10)]
-#   )
-#   print(diff_tbl)
-# }
-
-
-#################################################################################
-#################################################################################
-# acf(data3[data3[,1]>0,1])
-# acf(data3[data3[,2]>0,2])
-# data3pos <- data3
-# data3pos[data3pos==0] <- NA
-# acf(data3pos[,1])
-# ?acf
-# acf(data3pos[,1],na.action=na.pass)
-# acf(data3pos[,2],na.action=na.pass)
-# acf(data3pos[,3],na.action=na.pass)
-
-### station 11, 15, (23 or
-
-### station 11, 23, (28 or
-
-### station 22, 23, (28 or
-
-### station 25: (15, 22 and 28)
-### station 23: (11, 15, 22, 27 and 28)
-### station 28: (11 and 27)
-### station 11: (15)
-### station 15: (27)
-
-### check X(11,25,23) & X(11,15,28) & X(6, 25,27)
-
-##############################################################################
-## Load neural estimator
-##############################################################################
-
-library("NeuralEstimators")
-library("JuliaConnectoR")
-# Sys.unsetenv("JULIACONNECTOR_JULIAOPTS")
-Sys.setenv(JULIA_BINDIR = "/Users/alotainm/.julia/juliaup/julia-1.11.5+0.x64.apple.darwin14/bin")
-Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.")
-juliaEval('using NeuralEstimators, Flux')
-source("R/Architecture.R")
-
-install.packages("NeuralEstimators")
-
-# Load the trained estimator
-loadstate(NPE, file.path("intermediates", "NPE.bson"))
-juliaEval('loadstate(NPE, "intermediates/NPE.bson")')
-
-# Dummy data
-Y <- matrix(runif(2 * 1000), nrow = 2)
-
-# Sample from the posterior given Y
-samples <- sampleposterior(NPE, Y)[[1]]
-apply(samples, 1, median)
-apply(samples, 1, quantile, c(0.025, 0.975))
