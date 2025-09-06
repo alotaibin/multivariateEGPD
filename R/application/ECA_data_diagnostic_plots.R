@@ -8,6 +8,20 @@ sampleposterior <- juliaFun("sampleposterior")
 logdensity <- juliaFun("logdensity")
 
 ##############################################################################
+## la[oad data (pair stations)
+##############################################################################
+df_11_15_scaled <- read.csv("ECA_blend_rr_data/pair_11_15_matrix_scaled.csv", stringsAsFactors = FALSE)
+df_11_23_scaled <- read.csv("ECA_blend_rr_data/pair_11_23_matrix_scaled.csv", stringsAsFactors = FALSE)
+df_15_23_scaled <- read.csv("ECA_blend_rr_data/pair_15_23_matrix_scaled.csv", stringsAsFactors = FALSE)
+mat_11_15_scaled <- as.matrix(df_11_15_scaled[,-1])
+mat_11_23_scaled <- as.matrix(df_11_23_scaled[,-1])
+mat_15_23_scaled <- as.matrix(df_15_23_scaled[,-1])
+dim(mat_11_15_scaled) #(2, 2138)
+dim(mat_11_23_scaled) #(2, 2166)
+dim(mat_15_23_scaled) #(2, 2133)
+
+
+##############################################################################
 ## Sample from the posterior given Y
 ##############################################################################
 
