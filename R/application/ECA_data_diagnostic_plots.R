@@ -1,3 +1,42 @@
+library("NeuralEstimators")
+library("JuliaConnectoR")
+Sys.setenv(JULIA_BINDIR = "/Users/alotainm/.julia/juliaup/julia-1.11.5+0.x64.apple.darwin14/bin")
+Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.")
+juliaEval('using NeuralEstimators, Flux')
+source("R/Architecture.R")
+sampleposterior <- juliaFun("sampleposterior")
+logdensity <- juliaFun("logdensity")
+
+##############################################################################
+## Sample from the posterior given Y
+##############################################################################
+
+# Load the trained estimator
+set.seed(123)
+loadstate(NPE, file.path("intermediates", "NPE.bson"))
+
+# Variance stabilizing transformation applied to the data
+signed_log <- function(x) (sign(x) * log1p(abs(x))) - 1
+mat_11_15 <- t(apply(mat_11_15_scaled, 1, signed_log))
+mat_11_23 <- t(apply(mat_11_23_scaled, 1, signed_log))
+mat_15_23 <- t(apply(mat_15_23_scaled, 1, signed_log))
+## Station 11 & 15
+samples_11_15 <- sampleposterior(NPE, mat_11_15)[[1]]  # 6×1000 matrix
+samples_11_15 <- exp(samples_11_15)
+estimates1 <- apply(samples_11_15, 1, median) #[1]  2.2049415  0.5975928 -0.8115623  3.2652302  1.8067400 -5.7183907
+estimates1_CI <- apply(samples_11_15, 1, quantile, c(0.025, 0.975))
+## Station 11 & 23
+samples_11_23 <- sampleposterior(NPE, mat_11_23)[[1]]
+samples_11_23 <- exp(samples_11_23)
+estimates2 <- apply(samples_11_23, 1, median)
+estimates2_CI <-apply(samples_11_23, 1, quantile, c(0.025, 0.975))
+## Station 15 & 23
+samples_15_23 <- sampleposterior(NPE, mat_15_23)[[1]]
+samples_15_23 <- exp(samples_15_23)
+estimates3 <- apply(samples_15_23, 1, median)
+estimates3_CI <-apply(samples_15_23, 1, quantile, c(0.025, 0.975))
+
+
 ##################################################
 ##  Pairs plots btw the real and simulated data ##
 ##################################################
@@ -11,12 +50,12 @@ parameter_labels <- c(
 ) 
 set.seed(123)
 
-n11 <- ncol(mat_11_15_scaled) #2138
-n22 <- ncol(mat_11_23_scaled) #2166
-n33 <- ncol(mat_15_23_scaled) #2133
-sample11 <- rXY(n11,estimates1[1:3],c(estimates1[4],estimates1[4]),c(estimates1[5],estimates1[5]),estimates1[6],PLOT=F,onlyXY=FALSE)
-sample22 <- rXY(n22,estimates2[1:3],c(estimates2[4],estimates2[4]),c(estimates2[5],estimates2[5]),estimates2[6],PLOT=F,onlyXY=FALSE)
-sample33 <- rXY(n33,estimates3[1:3],c(estimates3[4],estimates3[4]),c(estimates3[5],estimates3[5]),estimates3[6],PLOT=F,onlyXY=FALSE)
+n1 <- ncol(mat_11_15_scaled) #2138
+n2 <- ncol(mat_11_23_scaled) #2166
+n3 <- ncol(mat_15_23_scaled) #2133
+sample11 <- rXY(n1,estimates1[1:3],c(estimates1[4],estimates1[4]),c(estimates1[5],estimates1[5]),estimates1[6],PLOT=F,onlyXY=FALSE)
+sample22 <- rXY(n2,estimates2[1:3],c(estimates2[4],estimates2[4]),c(estimates2[5],estimates2[5]),estimates2[6],PLOT=F,onlyXY=FALSE)
+sample33 <- rXY(n3,estimates3[1:3],c(estimates3[4],estimates3[4]),c(estimates3[5],estimates3[5]),estimates3[6],PLOT=F,onlyXY=FALSE)
 ssX1 <- sample11$XY[,1]
 ssY1 <- sample11$XY[,2]
 ssX2 <- sample22$XY[,1]
@@ -326,29 +365,29 @@ ssXY3 <- ssX3 + ssY3
 
 iter <- 10000
 Timestart <- Sys.time()
-QQbootstrapping1 <- QQbootstrapping(iter, n11, data = cbind(ssX1,ssY1,ssXY1))
+QQbootstrapping1 <- QQbootstrapping(iter, n1, data = cbind(ssX1,ssY1,ssXY1))
 Timeend2 <- Sys.time()
 TotTime2 <- Timeend2 - Timestart #4.5 hours
 
 Timestart <- Sys.time()
-QQbootstrapping2 <- QQbootstrapping(iter, n22, data = cbind(ssX2,ssY2,ssXY2))
+QQbootstrapping2 <- QQbootstrapping(iter, n2, data = cbind(ssX2,ssY2,ssXY2))
 Timeend2 <- Sys.time()
 TotTime2 <- Timeend2 - Timestart  #4.2 hours
 
 Timestart2 <- Sys.time()
-QQbootstrapping3 <- QQbootstrapping(iter, n33, data = cbind(ssX3,ssY3,ssXY3))
+QQbootstrapping3 <- QQbootstrapping(iter, n3, data = cbind(ssX3,ssY3,ssXY3))
 Timeend22 <- Sys.time()
 TotTime22 <- Timeend22 - Timestart2 #3.5 hours
 
-QQBoot.CI.X1 <- matrix(NA,ncol=iter, nrow=n11)
-QQBoot.CI.Y1 <- matrix(NA, ncol=iter, nrow=n11)
-QQBoot.CI.XY1 <- matrix(NA, ncol=iter, nrow=n11)
-QQBoot.CI.X2 <- matrix(NA,ncol=iter, nrow=n22)
-QQBoot.CI.Y2 <- matrix(NA, ncol=iter, nrow=n22)
-QQBoot.CI.XY2 <- matrix(NA, ncol=iter, nrow=n22)
-QQBoot.CI.X3 <- matrix(NA,ncol=iter, nrow=n33)
-QQBoot.CI.Y3 <- matrix(NA, ncol=iter, nrow=n33)
-QQBoot.CI.XY3 <- matrix(NA, ncol=iter, nrow=n33)
+QQBoot.CI.X1 <- matrix(NA,ncol=iter, nrow=n1)
+QQBoot.CI.Y1 <- matrix(NA, ncol=iter, nrow=n1)
+QQBoot.CI.XY1 <- matrix(NA, ncol=iter, nrow=n1)
+QQBoot.CI.X2 <- matrix(NA,ncol=iter, nrow=n2)
+QQBoot.CI.Y2 <- matrix(NA, ncol=iter, nrow=n2)
+QQBoot.CI.XY2 <- matrix(NA, ncol=iter, nrow=n2)
+QQBoot.CI.X3 <- matrix(NA,ncol=iter, nrow=n3)
+QQBoot.CI.Y3 <- matrix(NA, ncol=iter, nrow=n3)
+QQBoot.CI.XY3 <- matrix(NA, ncol=iter, nrow=n3)
 
 for (i in 1:iter){
   QQBoot.CI.X1[,i] <- QQbootstrapping1[[i]][,1]
@@ -439,6 +478,46 @@ PW.CB.xy2 <- envelope(mat = t(QQBoot.CI.XY2), level = c(0.95,0.95), index = 1:nc
 PW.CB.x3 <- envelope(mat = t(QQBoot.CI.X3), level = c(0.95,0.95), index = 1:ncol(t(QQBoot.CI.X3)))
 PW.CB.y3 <- envelope(mat = t(QQBoot.CI.Y3), level = c(0.95,0.95), index = 1:ncol(t(QQBoot.CI.Y3)))
 PW.CB.xy3 <- envelope(mat = t(QQBoot.CI.XY3), level = c(0.95,0.95), index = 1:ncol(t(QQBoot.CI.XY3)))
+
+#### QQ plots for bootstrap uncertainty ###
+###########################################
+par(mfrow=c(1,3), mar = c(4,4,4,4))
+p1 <- length(mat_11_15_scaled[1,])  # 2138
+p2 <- length(mat_11_23_scaled[1,])  # 2166
+p3 <- length(mat_15_23_scaled[1,])  # 2133
+
+# Pair 1 trimming:
+Boot.CB.x1.mean <- Boot.CB.x1.mean[seq_len(p1), , drop = FALSE]
+PW.CB.x1$point <- PW.CB.x1$point[, seq_len(p1), drop = FALSE]
+PW.CB.x1$overall <- PW.CB.x1$overall[, seq_len(p1), drop = FALSE]
+Boot.CB.y1.mean <- Boot.CB.y1.mean[seq_len(p1), , drop = FALSE]
+PW.CB.y1$point <- PW.CB.y1$point[, seq_len(p1), drop = FALSE]
+PW.CB.y1$overall <- PW.CB.y1$overall[, seq_len(p1), drop = FALSE]
+Boot.CB.xy1.mean <- Boot.CB.xy1.mean[seq_len(p1), , drop = FALSE]
+PW.CB.xy1$point <- PW.CB.xy1$point[, seq_len(p1), drop = FALSE]
+PW.CB.xy1$overall <- PW.CB.xy1$overall[, seq_len(p1), drop = FALSE]
+
+# Pair 2 trimming:
+Boot.CB.x2.mean <- Boot.CB.x2.mean[seq_len(p2), , drop = FALSE]
+PW.CB.x2$point <- PW.CB.x2$point[, seq_len(p2), drop = FALSE]
+PW.CB.x2$overall <- PW.CB.x2$overall[, seq_len(p2), drop = FALSE]
+Boot.CB.y2.mean <- Boot.CB.y2.mean[seq_len(p2), , drop = FALSE]
+PW.CB.y2$point <- PW.CB.y2$point[, seq_len(p2), drop = FALSE]
+PW.CB.y2$overall <- PW.CB.y2$overall[, seq_len(p2), drop = FALSE]
+Boot.CB.xy2.mean <- Boot.CB.xy2.mean[seq_len(p2), , drop = FALSE]
+PW.CB.xy2$point <- PW.CB.xy2$point[, seq_len(p2), drop = FALSE]
+PW.CB.xy2$overall <- PW.CB.xy2$overall[, seq_len(p2), drop = FALSE]
+
+# Pair 3 trimming:
+Boot.CB.x3.mean <- Boot.CB.x3.mean[seq_len(p3), , drop = FALSE]
+PW.CB.x3$point <- PW.CB.x3$point[, seq_len(p3), drop = FALSE]
+PW.CB.x3$overall <- PW.CB.x3$overall[, seq_len(p3), drop = FALSE]
+Boot.CB.y3.mean <- Boot.CB.y3.mean[seq_len(p3), , drop = FALSE]
+PW.CB.y3$point <- PW.CB.y3$point[, seq_len(p3), drop = FALSE]
+PW.CB.y3$overall <- PW.CB.y3$overall[, seq_len(p3), drop = FALSE]
+Boot.CB.xy3.mean <- Boot.CB.xy3.mean[seq_len(p3), , drop = FALSE]
+PW.CB.xy3$point <- PW.CB.xy3$point[, seq_len(p3), drop = FALSE]
+PW.CB.xy3$overall <- PW.CB.xy3$overall[, seq_len(p3), drop = FALSE]
 
 ###################### for data pair 1 ######################   
 plot(sort(mat_11_15_scaled[1,]), Boot.CB.x1.mean[,1], xlab = "simulated X", ylab = "AMMERZODEN",  main = "")
