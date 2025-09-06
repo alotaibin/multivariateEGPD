@@ -385,6 +385,48 @@ cat("Replacing station", sel_cols[3], "with station", best, "(", best_id, ")\n")
 
 # 5. Build your new sel vector
 new_sel <- c(sel_cols[1], sel_cols[2], best)
-new_sel
 
 #################################################################################
+# Chosen stations: station_indx <- c(11, 23, 15)
+# Helper to build, rescale, and save a pair matrix
+make_and_save_scaled_pair <- function(i, j, name) {
+  # 1) Extract the two‐column submatrix and drop zeros
+  m <- mat_season[, c(i, j), drop=FALSE]
+  keep <- (m[,1] != 0) & (m[,2] != 0)
+  m <- m[keep, , drop=FALSE]
+  # 2) Compute empirical SD of each column
+  sds <- apply(m, 2, sd, na.rm = TRUE)
+  # 3) Rescale
+  m_scaled <- sweep(m, 2, sds, `/`)
+  # 4) Save scaling factors for later (so you can “un‐scale” if needed)
+  scale_df <- data.frame(
+    station = paste0("S", stations$STAID[c(i,j)]),
+    sd      = sds
+  )
+  write.csv(
+    scale_df,
+    file = sprintf("pair_%s_scales.csv", name),
+    row.names = FALSE
+  )
+  # 5) Save the scaled matrix
+  colnames(m_scaled) <- paste0("S", stations$STAID[c(i,j)])
+  write.csv(
+    as.data.frame(m_scaled),
+    file = sprintf("pair_%s_matrix_scaled.csv", name),
+    row.names = FALSE
+  )
+}
+# Loop over your three pairs
+for (nm in names(pairs)) {
+  idx <- pairs[[nm]]
+  make_and_save_scaled_pair(idx[1], idx[2], nm)
+}
+df_11_15_scaled <- read.csv("pair_11_15_matrix_scaled.csv", stringsAsFactors = FALSE)
+df_11_23_scaled <- read.csv("pair_11_23_matrix_scaled.csv", stringsAsFactors = FALSE)
+df_15_23_scaled <- read.csv("pair_15_23_matrix_scaled.csv", stringsAsFactors = FALSE)
+dim(df_11_15_scaled)
+dim(df_11_23_scaled)
+dim(df_15_23_scaled)
+mat_11_15_scaled <- as.matrix(df_11_15_scaled)
+mat_11_23_scaled <- as.matrix(df_11_23_scaled)
+mat_15_23_scaled <- as.matrix(df_15_23_scaled)
