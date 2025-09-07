@@ -1,10 +1,11 @@
-# multivariateEGPD
-This repository contains the source code and replication files for ‘Joint modeling of low and high extremes using the multivariate eGPD,’ including simulation studies, simulation-based inference with the neural ‘NeuralEstimators’ package, and an application to Dutch precipitation extremes.
+# Source code for "Joint modeling of low and high extremes using a multivariate extended generalized Pareto distribution"
+
+This repository contains the source code and replication files for ‘Joint modeling of low and high extremes using the multivariate eGPD,’ including simulation studies, simulation-based inference with the package [NeuralEstimators](https://msainsburydale.github.io/NeuralEstimators.jl/dev/), and an application to Dutch precipitation extremes.
 
 
 ### Software dependencies
 
-We suggest that users set up a [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html) environment, so that the dependencies of this repository do not affect the user's current installation. In your environment, install `Python`, `R`, and `Julia`. An environment instruction that worked in our case was the following:
+We suggest that users set up a [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html) environment, so that the dependencies of this repository do not affect the user's current installation. In your environment, install `R`, and `Julia`. An environment instruction that worked in our case was the following:
 
 ```
 conda create -n mEPGD -c conda-forge r-base nlopt
@@ -42,7 +43,7 @@ julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'
 
 ### Hardware requirements
 
-In general, the fast training of neural networks requires GPUs. However, the code in this repository also runs on CPUs in a moderate amount of time. Therefore, there are no major hardware requirements for running this code. 
+There are no specific hardware requirements for running this code.
 
 ### Reproducing the results
 
