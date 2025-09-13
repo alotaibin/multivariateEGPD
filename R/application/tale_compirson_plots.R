@@ -131,6 +131,18 @@ gpd_ct_up    <- cbind(
 ################################################################################
 observed_data <- cbind(real1, real2)
 
+## Simulate data under estimated parameters
+n2 <- ncol(mat_11_23_scaled) # 2166 obs
+sample22 <- rXY(n2,
+                estimates[1:3],
+                c(estimates[4],estimates[4]),
+                c(estimates[5],estimates[5]),
+                estimates[6],
+                PLOT=FALSE, onlyXY=FALSE)
+
+ssX2 <- sample22$XY[,1]
+ssY2 <- sample22$XY[,2]
+
 sim_data_list_up <- list(
   Log   = gpd_log_up,
   Bilog = gpd_bilog_up,
@@ -148,7 +160,7 @@ sim_data_list_low <- list(
                  Fgpd_inv(fit_low2$param, -real2, pgev(rbvevd(m_data, dep = fit_hr_low$estimate, model = "hr")[,2]), thresh_low[2], 0.90)),
   CT    = -cbind(Fgpd_inv(fit_low1$param, -real1, pgev(rbvevd(m_data, alpha = fit_ct_low$estimate[1], beta = fit_ct_low$estimate[2], model = "ct")[,1]), thresh_low[1], 0.90),
                  Fgpd_inv(fit_low2$param, -real2, pgev(rbvevd(m_data, alpha = fit_ct_low$estimate[1], beta = fit_ct_low$estimate[2], model = "ct")[,2]), thresh_low[2], 0.90)),
-  MEGPD = cbind(ssX3, ssY3)
+  MEGPD = cbind(ssX2, ssY2)
 )
 
 ################################################################################
