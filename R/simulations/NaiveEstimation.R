@@ -122,10 +122,15 @@ df.naive <- data.frame(
   truth = as.vector(theta_test), 
   estimate = as.vector(theta.hat.Naive)
 )
+
+## Save figure into intermediates/Figures/Simulation
+fig_path <- file.path("intermediates", "Figures", "Simulation")
+dir.create(fig_path, recursive = TRUE, showWarnings = FALSE)
+
 ggsave(
   plot = plotestimates(df.naive), 
   file = "Naive_assessment.pdf", 
-  path = "Figures", device = "pdf", width = 18, height = 3
+  path = fig_path, device = "pdf", width = 18, height = 3
 )
 
 
