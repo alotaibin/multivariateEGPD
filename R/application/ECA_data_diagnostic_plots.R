@@ -6,13 +6,13 @@ library("NeuralEstimators")
 library("JuliaConnectoR")
 library("boot")        # for envelope()
 source("R/application/MEGPD_Model.R")
-#Sys.setenv(JULIA_BINDIR = "/Users/alotainm/.julia/juliaup/julia-1.11.5+0.x64.apple.darwin14/bin")
-#Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.")
-#juliaEval('using NeuralEstimators, Flux')
-#source("R/simulations/Architecture.R")
-# Functions from Julia
-#sampleposterior <- juliaFun("sampleposterior")
-#logdensity <- juliaFun("logdensity")
+Sys.setenv(JULIA_BINDIR = "/Users/alotainm/.julia/juliaup/julia-1.11.5+0.x64.apple.darwin14/bin")
+Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.")
+juliaEval('using NeuralEstimators, Flux')
+source("R/simulations/Architecture.R")
+Functions from Julia
+sampleposterior <- juliaFun("sampleposterior")
+logdensity <- juliaFun("logdensity")
 
 
 ###############################################################
@@ -27,18 +27,18 @@ dim(mat_11_23_scaled)  # (2 × 2166)
 ## 2. Load trained estimator & sample posterior
 ###############################################################
 set.seed(123)
-#loadstate(NPE, file.path("intermediates", "NPE.bson"))
+loadstate(NPE, file.path("intermediates", "NPE.bson"))
 
 # Variance stabilizing transformation
-#signed_log <- function(x) (sign(x) * log1p(abs(x))) - 1
-#mat_11_23 <- t(apply(mat_11_23_scaled, 1, signed_log))
+signed_log <- function(x) (sign(x) * log1p(abs(x))) - 1
+mat_11_23 <- t(apply(mat_11_23_scaled, 1, signed_log))
 
 # Posterior samples
-#samples_11_23 <- sampleposterior(NPE, mat_11_23)[[1]]
-#samples_11_23 <- exp(samples_11_23)  # back-transform
-#estimates <- apply(samples_11_23, 1, median)
-#estimates_CI <- apply(samples_11_23, 1, quantile, c(0.025, 0.975))
-estimates <- c(1.1188870,  1.3769174,  0.1953660,  4.0885365, 20.9920100,  0.2361101) 
+samples_11_23 <- sampleposterior(NPE, mat_11_23)[[1]]
+samples_11_23 <- exp(samples_11_23)  # back-transform
+estimates <- apply(samples_11_23, 1, median)
+estimates_CI <- apply(samples_11_23, 1, quantile, c(0.025, 0.975))
+#estimates <- c(1.1188870,  1.3769174,  0.1953660,  4.0885365, 20.9920100,  0.2361101) 
 
 ###############################################################
 ## 3. Simulate data under estimated parameters
@@ -84,7 +84,7 @@ ECA_data_11_23 <- cbind(data_pair2_11(mat_11_23_scaled[1,]),
 # Compute chi(u), chi(l)
 U <- seq(0,1, by=0.01)
 L <- seq(0,1, by=0.01)
-iter <- 100   # reduce if too slow
+iter <- 10000   # reduce if too slow
 chi.U <- sapply(U, function(u) chi.u(sim1.11_23,u))
 chi.Udata <- sapply(U, function(u) chi.u(ECA_data_11_23,u))
 chi.L <- sapply(L, function(l) chi.l(sim1.11_23,l))
@@ -105,7 +105,6 @@ CBbootstrapping <- function(iter,u,data){
 
 RNGversion("3.6.0") 
 set.seed(1001)
-iter <- 100   # reduce if too slow
 boot_res <- CBbootstrapping(iter, U, data=ECA_data_11_23)
 
 Boot.CI.u <- sapply(boot_res, function(x) x[,1])
@@ -144,7 +143,6 @@ lines(L[-c(1,2)], PW.CB.l$overall[1, ], lty=1, col="gray")
 lines(L[-c(1,2)], PW.CB.l$overall[2, ], lty=1, col="gray")
 dev.off()
 
-print("chi plot done")
 
 ###############################################################
 ## 5. QQ plot with bootstrap CI
@@ -162,6 +160,7 @@ QQbootstrapping <- function(iter, m, data){
   res
 }
 
+iter <- 5000   # It might take time (iter = 10000,  for paper results)
 n2 <- ncol(mat_11_23_scaled)
 QQboot <- QQbootstrapping(iter, n2, data=cbind(ssX2,ssY2,ssX2+ssY2))
 
