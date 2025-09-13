@@ -3,7 +3,7 @@ library("dplyr")
 library("parallel")
 library("NeuralEstimators")
 library("ggplot2")
-source("R/ModelSimulator.R")
+source("R/simulations/ModelSimulator.R")
 
 NaiveEstimator <- function(Y,thresh,start,param.bounds){
   threshL <- thresh[1]
