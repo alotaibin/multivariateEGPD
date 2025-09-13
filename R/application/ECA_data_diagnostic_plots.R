@@ -117,20 +117,31 @@ Boot.CI.l <- Boot.CI.l[-c(1,2), , drop = FALSE]
 PW.CB.u <- envelope(mat=t(Boot.CI.u), level=c(0.95,0.95), index=1:ncol(t(Boot.CI.u)))
 PW.CB.l <- envelope(mat=t(Boot.CI.l), level=c(0.95,0.95), index=1:ncol(t(Boot.CI.l)))
 
-# Plot χ(u), χ(l)
+# Plot χ(u), χ(l) plots with pointwise + overall confidence bands
 png("intermediates/Figures/Application/chi_measures_pair11_23.png", width=7, height=5, units="in", res=300)
 par(mfrow=c(1,2))
-plot(U, chi.U, type="l", col="red", ylim=c(0,1),
-     xlab="Threshold u", ylab=expression(chi(u)))
-lines(U[-101], chi.Udata)
-lines(U[-101], PW.CB.u$point[1,], lty=2, col="gray")
-lines(U[-101], PW.CB.u$point[2,], lty=2, col="gray")
 
+# Upper tail
+plot(U, chi.U, type="l", col="red", ylim=c(0,1),
+     xlab="Threshold u", ylab=expression(chi(u)), asp=1)
+lines(U, chi.Udata)
+# pointwise bands
+lines(U[-101], PW.CB.u$point[1, ], lty=4, col="gray")
+lines(U[-101], PW.CB.u$point[2, ], lty=4, col="gray")
+# overall bands
+lines(U[-101], PW.CB.u$overall[1, ], lty=1, col="gray")
+lines(U[-101], PW.CB.u$overall[2, ], lty=1, col="gray")
+
+# Lower tail
 plot(L, chi.L, type="l", col="red", ylim=c(0,1),
-     xlab="Threshold l", ylab=expression(chi(l)))
-lines(L[-c(1,2)], chi.Ldata)
-lines(L[-c(1,2)], PW.CB.l$point[1,], lty=2, col="gray")
-lines(L[-c(1,2)], PW.CB.l$point[2,], lty=2, col="gray")
+     xlab="Threshold l", ylab=expression(chi(l)), asp=1)
+lines(L, chi.Ldata)
+# pointwise bands
+lines(L[-c(1,2)], PW.CB.l$point[1, ], lty=4, col="gray")
+lines(L[-c(1,2)], PW.CB.l$point[2, ], lty=4, col="gray")
+# overall bands
+lines(L[-c(1,2)], PW.CB.l$overall[1, ], lty=1, col="gray")
+lines(L[-c(1,2)], PW.CB.l$overall[2, ], lty=1, col="gray")
 dev.off()
 
 print("chi plot done")
