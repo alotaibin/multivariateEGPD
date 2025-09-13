@@ -185,10 +185,16 @@ draw_panel <- function(th, ob, list_data, title, colors) {
 ################################################################################
 # Final Plot: 2×3 layout (upper = first row, lower = second row)
 ################################################################################
+# Save plot
+dir.create("intermediates/Figures/Application", showWarnings = FALSE, recursive = TRUE)
+png("intermediates/Figures/Application/qq_panels_11_23.png", width=8, height=6, units="in", res=300)
+
 colors <- c("purple2", "goldenrod", "steelblue", "seagreen3", "tomato")
-set_labels <- names(sim_data_list_up)
+legend_cols <- colors
+set_labels  <- c("Log", "Bilog", "HR", "CT", "MEGPD")
 
 par(mfrow = c(2,3), oma = c(5,5,4,8), mar = c(2,2,1,1), xpd = FALSE)
+
 
 # Upper
 draw_panel(quantile(sim_data_list_up[[1]][,1], seq(0,1,0.01)),
@@ -237,15 +243,5 @@ legend(
   bty    = "n",
   cex    = 0.8
 )
-# Save plot
-dir.create("Figures/Application", showWarnings = FALSE, recursive = TRUE)
-png("Figures/Application/qq_panels_11_23.png", width=8, height=6, units="in", res=300)
-
-# -------------- ALL YOUR PLOTTING CODE HERE ----------------
-par(mfrow = c(2,3), oma = c(5,5,4,8), mar = c(2,2,1,1), xpd = FALSE)
-# draw_panel(...) x6
-# mtext(...)
-# legend(...)
-# -----------------------------------------------------------
 
 dev.off()
