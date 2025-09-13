@@ -19,6 +19,10 @@ parameter_labels <- c(
   "thw" = expression(theta[omega])
 )
 
+## Save path for simulation figures
+fig_path <- file.path("intermediates", "Figures", "Simulation")
+dir.create(fig_path, recursive = TRUE, showWarnings = FALSE)
+
 # Plots: marginals for multiple cases
 K <- 3
 theta <- theta_test[, 1:K, drop = F]
@@ -45,7 +49,7 @@ plotlist <- lapply(1:K, function(k) {
     facet_wrap(~parameter, scales = "free", nrow = 1, labeller = label_parsed) +
     theme_bw() +
     labs(x = "", y = "Density", colour = "", fill = "") +
-    geom_vline(data = true_params_df, aes(xintercept = true_value), linetype = "dashed",colour="black") +
+    geom_vline(data = true_params_df, aes(xintercept = true_value), linetype = "dashed", colour = "black") +
     # geom_vline(data = NBE_estimates_df, aes(xintercept = estimate), colour = "#00BA38") +
     # geom_vline(data = NPE_estimates_df, aes(xintercept = estimate), colour = "#619CFF") +
     # geom_vline(data = Naive_estimates_df, aes(xintercept = estimate), colour="#F8766D") + 
@@ -54,7 +58,7 @@ plotlist <- lapply(1:K, function(k) {
       panel.grid.major = element_blank(),  # removes major gridlines
       panel.grid.minor = element_blank(),   # removes minor gridlines
       strip.text = element_text(size = 12)  # Increase font size
-      )
+    )
   if (k > 1) {
     gg <- gg + theme(strip.text = element_blank())
   }
@@ -71,7 +75,7 @@ figure
 ggsave(
   plot = figure, 
   file = "posterior_and_estimates.pdf", 
-  path = "Figures", device = "pdf", width = 12, height = 7
+  path = fig_path, device = "pdf", width = 12, height = 7
 )
 
 # Plots: all test cases 
@@ -80,7 +84,7 @@ df.naive <- data.frame(
   parameter = rep(rownames(theta_test), ncol(theta_test)), 
   truth = as.vector(theta_test), 
   estimate = as.vector(theta_test_naive)
-  )
+)
 df.nbe <- data.frame(
   estimator = "NBE", 
   parameter = rep(rownames(theta_test), ncol(theta_test)), 
@@ -97,9 +101,9 @@ df <- rbind(df.naive, df.nbe, df.npe)
 df <- dplyr::mutate_at(df, .vars = "parameter", .funs = factor, levels = names(parameter_labels), labels = parameter_labels)
 
 figure <- ggplot2::ggplot(df) + 
-  ggplot2::geom_point(ggplot2::aes(x=truth, y = estimate, colour  = estimator), alpha = 0.75) + 
+  ggplot2::geom_point(ggplot2::aes(x = truth, y = estimate, colour  = estimator), alpha = 0.75) + 
   ggplot2::geom_abline(colour = "black", linetype = "dashed") +
-  ggh4x::facet_grid2(estimator~parameter, scales = "free", independent = "y", labeller = label_parsed) + 
+  ggh4x::facet_grid2(estimator ~ parameter, scales = "free", independent = "y", labeller = label_parsed) + 
   ggplot2::labs(colour = "") + 
   ggplot2::theme_bw() +
   ggplot2::theme(strip.background = ggplot2::element_blank()) + 
@@ -109,24 +113,23 @@ figure <- ggplot2::ggplot(df) +
     # panel.grid.major = element_blank(),  # removes major gridlines
     # panel.grid.minor = element_blank(),   # removes minor gridlines
     strip.text = element_text(size = 12)  # Increase font size
-    ) #+ 
-  # theme(legend.position = "top")
-  # theme(legend.position = "none")
+  ) #+ 
+# theme(legend.position = "top")
+# theme(legend.position = "none")
 
 ggsave(
   plot = figure, 
   file = "assessment.pdf", 
-  path = "Figures", device = "pdf", width = 11, height = 5
+  path = fig_path, device = "pdf", width = 11, height = 5
 )
 
-
 ### RMSEs 
-rmse_NBE <- sqrt(apply((theta_test_NBE-theta_test)^2,1,mean))
-rmse_NPE <- sqrt(apply((theta_test_NPE-theta_test)^2,1,mean))
-rmse_naive <- sqrt(apply((theta_test_naive-theta_test)^2,1,mean))
+rmse_NBE <- sqrt(apply((theta_test_NBE - theta_test)^2, 1, mean))
+rmse_NPE <- sqrt(apply((theta_test_NPE - theta_test)^2, 1, mean))
+rmse_naive <- sqrt(apply((theta_test_naive - theta_test)^2, 1, mean))
 rbind(rmse_naive, rmse_NBE, rmse_NPE)
 
-### Trimmeds RMSEs
+### Trimmed RMSEs
 trimmed_rmse <- function(errors, trim = 0.1) {
   n <- length(errors)
   k <- floor(n * trim / 2)  # trim equally on both sides
