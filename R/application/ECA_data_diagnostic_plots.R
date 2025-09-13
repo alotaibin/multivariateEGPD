@@ -60,7 +60,7 @@ par(mfrow=c(1,1))
 plot(ssX2,ssY2, xlab="AMMERZODEN", ylab="ZALTBOMMEL", pch=20, cex=.9)
 points(mat_11_23_scaled[1,],mat_11_23_scaled[2,] ,pch=20, cex=.9, col="red")
 dev.off()
-
+print("scatter plot done")
 ###############################################################
 ## 4. χ(u) and χ(l) measures with bootstrap CIs
 ###############################################################
@@ -132,6 +132,8 @@ lines(L, chi.Ldata)
 lines(L, PW.CB.l$point[1,], lty=2, col="gray")
 lines(L, PW.CB.l$point[2,], lty=2, col="gray")
 dev.off()
+
+print("chi plot done")
 
 ###############################################################
 ## 5. QQ plot with bootstrap CI
