@@ -60,7 +60,7 @@ par(mfrow=c(1,1))
 plot(ssX2,ssY2, xlab="AMMERZODEN", ylab="ZALTBOMMEL", pch=20, cex=.9)
 points(mat_11_23_scaled[1,],mat_11_23_scaled[2,] ,pch=20, cex=.9, col="red")
 dev.off()
-print("scatter plot done")
+
 ###############################################################
 ## 4. χ(u) and χ(l) measures with bootstrap CIs
 ###############################################################
@@ -84,7 +84,7 @@ ECA_data_11_23 <- cbind(data_pair2_11(mat_11_23_scaled[1,]),
 # Compute chi(u), chi(l)
 U <- seq(0,1, by=0.01)
 L <- seq(0,1, by=0.01)
-iter <- 10000   # reduce if too slow
+iter <- 10000   
 chi.U <- sapply(U, function(u) chi.u(sim1.11_23,u))
 chi.Udata <- sapply(U, function(u) chi.u(ECA_data_11_23,u))
 chi.L <- sapply(L, function(l) chi.l(sim1.11_23,l))
@@ -160,7 +160,7 @@ QQbootstrapping <- function(iter, m, data){
   res
 }
 
-iter <- 5000   # It might take time (iter = 10000,  for paper results)
+iter <- 5000   # It might take time (for paper results, iter = 10000)
 n2 <- ncol(mat_11_23_scaled)
 QQboot <- QQbootstrapping(iter, n2, data=cbind(ssX2,ssY2,ssX2+ssY2))
 
