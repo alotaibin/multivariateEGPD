@@ -122,15 +122,15 @@ png("intermediates/Figures/Application/chi_measures_pair11_23.png", width=7, hei
 par(mfrow=c(1,2))
 plot(U, chi.U, type="l", col="red", ylim=c(0,1),
      xlab="Threshold u", ylab=expression(chi(u)))
-lines(U, chi.Udata)
-lines(U, PW.CB.u$point[1,], lty=2, col="gray")
-lines(U, PW.CB.u$point[2,], lty=2, col="gray")
+lines(U[-101], chi.Udata)
+lines(U[-101], PW.CB.u$point[1,], lty=2, col="gray")
+lines(U[-101], PW.CB.u$point[2,], lty=2, col="gray")
 
 plot(L, chi.L, type="l", col="red", ylim=c(0,1),
      xlab="Threshold l", ylab=expression(chi(l)))
-lines(L, chi.Ldata)
-lines(L, PW.CB.l$point[1,], lty=2, col="gray")
-lines(L, PW.CB.l$point[2,], lty=2, col="gray")
+lines(L[-c(1,2)], chi.Ldata)
+lines(L[-c(1,2)], PW.CB.l$point[1,], lty=2, col="gray")
+lines(L[-c(1,2)], PW.CB.l$point[2,], lty=2, col="gray")
 dev.off()
 
 print("chi plot done")
