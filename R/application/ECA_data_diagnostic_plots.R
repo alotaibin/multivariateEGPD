@@ -111,8 +111,8 @@ boot_res <- CBbootstrapping(iter, U, data=ECA_data_11_23)
 Boot.CI.u <- sapply(boot_res, function(x) x[,1])
 Boot.CI.l <- sapply(boot_res, function(x) x[,2])
 
-Boot.CI.u <- Boot.CI.u[-nrow(Boot.CI.u), , drop=FALSE] 
-Boot.CI.l <- Boot.CI.l[, -c(1,2), drop = FALSE]
+Boot.CI.u <- Boot.CI.u[-101, , drop=FALSE] 
+Boot.CI.l <- Boot.CI.l[-1, , drop = FALSE]
                     
 PW.CB.u <- envelope(mat=t(Boot.CI.u), level=c(0.95,0.95), index=1:length(U))
 PW.CB.l <- envelope(mat=t(Boot.CI.l), level=c(0.95,0.95), index=1:length(L))
