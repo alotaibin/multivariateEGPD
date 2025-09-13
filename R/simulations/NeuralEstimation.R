@@ -6,13 +6,13 @@ library("JuliaConnectoR")
 library("dplyr")
 library("parallel")
 library("ggplot2")
-source("R/ModelSimulator.R")
+source("R/simulations/ModelSimulator.R")
 # Helper functions for neural posterior estimation
 sampleposterior <- juliaFun("sampleposterior")
 logdensity <- juliaFun("logdensity")
 Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.") 
 juliaEval('using NeuralEstimators, Flux, CUDA')
-source("R/Architecture.R")
+source("R/simulations/Architecture.R")
 
 int_path <- "intermediates"
 dir.create(int_path, recursive = TRUE, showWarnings = FALSE)
