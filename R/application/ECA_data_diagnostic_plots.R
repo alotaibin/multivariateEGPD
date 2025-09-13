@@ -27,17 +27,17 @@ dim(mat_11_23_scaled)  # (2 × 2166)
 ###############################################################
 set.seed(123)
 #loadstate(NPE, file.path("intermediates", "NPE.bson"))
-estimates <- c(1.1188870,  1.3769174,  0.1953660,  4.0885365, 20.9920100,  0.2361101) 
 
 # Variance stabilizing transformation
-signed_log <- function(x) (sign(x) * log1p(abs(x))) - 1
-mat_11_23 <- t(apply(mat_11_23_scaled, 1, signed_log))
+#signed_log <- function(x) (sign(x) * log1p(abs(x))) - 1
+#mat_11_23 <- t(apply(mat_11_23_scaled, 1, signed_log))
 
 # Posterior samples
-samples_11_23 <- sampleposterior(NPE, mat_11_23)[[1]]
-samples_11_23 <- exp(samples_11_23)  # back-transform
-estimates <- apply(samples_11_23, 1, median)
-estimates_CI <- apply(samples_11_23, 1, quantile, c(0.025, 0.975))
+#samples_11_23 <- sampleposterior(NPE, mat_11_23)[[1]]
+#samples_11_23 <- exp(samples_11_23)  # back-transform
+#estimates <- apply(samples_11_23, 1, median)
+#estimates_CI <- apply(samples_11_23, 1, quantile, c(0.025, 0.975))
+estimates <- c(1.1188870,  1.3769174,  0.1953660,  4.0885365, 20.9920100,  0.2361101) 
 
 ###############################################################
 ## 3. Simulate data under estimated parameters
