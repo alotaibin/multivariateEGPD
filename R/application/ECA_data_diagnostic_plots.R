@@ -15,7 +15,7 @@ sampleposterior <- juliaFun("sampleposterior")
 ###############################################################
 ## 1. Load preprocessed rainfall data (scaled pairs)
 ###############################################################
-df_11_23_scaled <- read.csv("ECA_blend_rr_data/pair_11_23_matrix_scaled.csv",
+df_11_23_scaled <- read.csv("R/data/pair_11_23_matrix_scaled.csv",
                             stringsAsFactors = FALSE)
 mat_11_23_scaled <- as.matrix(df_11_23_scaled[,-1])  # drop date column if present
 dim(mat_11_23_scaled)  # (2 × 2166)
