@@ -5,6 +5,7 @@
 library("NeuralEstimators")
 library("JuliaConnectoR")
 library("boot")        # for envelope()
+source("R/application/MEGPD_Model.R")
 #Sys.setenv(JULIA_BINDIR = "/Users/alotainm/.julia/juliaup/julia-1.11.5+0.x64.apple.darwin14/bin")
 #Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.")
 #juliaEval('using NeuralEstimators, Flux')
