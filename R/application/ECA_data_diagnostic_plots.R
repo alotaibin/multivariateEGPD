@@ -156,9 +156,9 @@ QQBoot.CI.X <- sapply(QQboot, function(x) x[,1])
 QQBoot.CI.Y <- sapply(QQboot, function(x) x[,2])
 QQBoot.CI.XY <- sapply(QQboot, function(x) x[,3])
 
-PW.CB.x <- envelope(mat=t(QQBoot.CI.X), level=c(0.95,0.95), index=1:nrow(QQBoot.CI.X))
-PW.CB.y <- envelope(mat=t(QQBoot.CI.Y), level=c(0.95,0.95), index=1:nrow(QQBoot.CI.Y))
-PW.CB.xy <- envelope(mat=t(QQBoot.CI.XY), level=c(0.95,0.95), index=1:nrow(QQBoot.CI.XY))
+PW.CB.x  <- envelope(mat = t(QQBoot.CI.X),  level=c(0.95,0.95), index=1:ncol(t(QQBoot.CI.X)))
+PW.CB.y  <- envelope(mat = t(QQBoot.CI.Y),  level=c(0.95,0.95), index=1:ncol(t(QQBoot.CI.Y)))
+PW.CB.xy <- envelope(mat = t(QQBoot.CI.XY), level=c(0.95,0.95), index=1:ncol(t(QQBoot.CI.XY)))
 
 # QQ plots
 png("intermediates/Figures/Application/qq_plots_pair11_23.png", width=9, height=4, units="in", res=300)
