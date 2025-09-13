@@ -1,9 +1,9 @@
 library("MASS")
 library("fields")
 library("dplyr")
-source("R/ModelSimulator.R")
+source("R/simulations/ModelSimulator.R")
 
-pdf(file="Figures/Illustration.pdf",height=7.4,width=8)
+pdf(file="intermediates/Figures/Simulation/Illustration.pdf",height=7.4,width=8)
 par(mfrow=c(3,3)) 
 
 set.seed(198345)
