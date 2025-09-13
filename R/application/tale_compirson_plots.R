@@ -8,6 +8,7 @@ library(evd)        # pgev(), rbvevd()
 library(ggplot2)
 library(patchwork)  # shared-legend layouts
 library(RColorBrewer)
+source("R/application/MEGPD_Model.R")
 
 ################################################################################
 # Helper: Inverse GPD Transformation (used for mapping simulated data)
