@@ -82,7 +82,7 @@ ECA_data_11_23 <- cbind(data_pair2_11(mat_11_23_scaled[1,]),
 # Compute chi(u), chi(l)
 U <- seq(0,1, by=0.01)
 L <- seq(0,1, by=0.01)
-iter <- 1000   # reduce if too slow
+iter <- 100   # reduce if too slow
 chi.U <- sapply(U, function(u) chi.u(sim1.11_23,u))
 chi.Udata <- sapply(U, function(u) chi.u(ECA_data_11_23,u))
 chi.L <- sapply(L, function(l) chi.l(sim1.11_23,l))
@@ -103,7 +103,7 @@ CBbootstrapping <- function(iter,u,data){
 
 RNGversion("3.6.0") 
 set.seed(1001)
-iter <- 1000   # reduce if too slow
+iter <- 100   # reduce if too slow
 boot_res <- CBbootstrapping(iter, U, data=ECA_data_11_23)
 
 Boot.CI.u <- sapply(boot_res, function(x) x[,1])
