@@ -8,7 +8,7 @@ library("boot")        # for envelope()
 Sys.setenv(JULIA_BINDIR = "/Users/alotainm/.julia/juliaup/julia-1.11.5+0.x64.apple.darwin14/bin")
 Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.")
 juliaEval('using NeuralEstimators, Flux')
-source("R/Architecture.R")
+source("R/simulations/Architecture.R")
 # Functions from Julia
 sampleposterior <- juliaFun("sampleposterior")
 logdensity <- juliaFun("logdensity")
