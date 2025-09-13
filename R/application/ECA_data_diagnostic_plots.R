@@ -5,13 +5,13 @@
 library("NeuralEstimators")
 library("JuliaConnectoR")
 library("boot")        # for envelope()
-Sys.setenv(JULIA_BINDIR = "/Users/alotainm/.julia/juliaup/julia-1.11.5+0.x64.apple.darwin14/bin")
-Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.")
-juliaEval('using NeuralEstimators, Flux')
-source("R/simulations/Architecture.R")
+#Sys.setenv(JULIA_BINDIR = "/Users/alotainm/.julia/juliaup/julia-1.11.5+0.x64.apple.darwin14/bin")
+#Sys.setenv("JULIACONNECTOR_JULIAOPTS" = "--project=.")
+#juliaEval('using NeuralEstimators, Flux')
+#source("R/simulations/Architecture.R")
 # Functions from Julia
-sampleposterior <- juliaFun("sampleposterior")
-logdensity <- juliaFun("logdensity")
+#sampleposterior <- juliaFun("sampleposterior")
+#logdensity <- juliaFun("logdensity")
 
 
 ###############################################################
@@ -26,7 +26,8 @@ dim(mat_11_23_scaled)  # (2 × 2166)
 ## 2. Load trained estimator & sample posterior
 ###############################################################
 set.seed(123)
-loadstate(NPE, file.path("intermediates", "NPE.bson"))
+#loadstate(NPE, file.path("intermediates", "NPE.bson"))
+estimates <- c(1.1188870,  1.3769174,  0.1953660,  4.0885365, 20.9920100,  0.2361101) 
 
 # Variance stabilizing transformation
 signed_log <- function(x) (sign(x) * log1p(abs(x))) - 1
