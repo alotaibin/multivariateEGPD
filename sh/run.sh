@@ -20,18 +20,18 @@ fi
 ###############################################################################
 # Simulation + Estimation pipeline
 ###############################################################################
-Rscript R/ModelSimulationPlots.R
-Rscript R/NeuralEstimation.R $quick
-Rscript R/NaiveEstimation.R
-Rscript R/ECDF.R
-Rscript R/Results.R
+Rscript R/simulations/ModelSimulationPlots.R
+Rscript R/simulations/NeuralEstimation.R $quick
+Rscript R/simulations/NaiveEstimation.R
+Rscript R/simulations/ECDF.R
+Rscript R/simulations/Results.R
 
 ###############################################################################
 # Application study pipeline
 ###############################################################################
 Rscript R/data/Process_ecad_rainfall_data.R
-Rscript R/ECA_data_diagnostic_plots.R
-Rscript R/tale_comparison_plots.R
+Rscript R/application/ECA_data_diagnostic_plots.R
+Rscript R/application/tale_compirson_plots.R   
 
 ###############################################################################
 # Clean-up and conversion
@@ -40,7 +40,7 @@ Rscript R/tale_comparison_plots.R
 # Delete extraneous network checkpoint files
 find . -type f -name "network_epoch*" -exec rm {} +
 
-# Convert PDFs to PNGs for figures
+# Convert PDFs to PNGs for simulation figures
 find img/ -type f -iname "*.pdf" -exec sh -c '
   for f do
     out="${f%.pdf}.png"
@@ -48,8 +48,8 @@ find img/ -type f -iname "*.pdf" -exec sh -c '
   done
 ' sh {} +
 
-# Convert PDFs in Application/Figures as well
-find Figures/Application/ -type f -iname "*.pdf" -exec sh -c '
+# Convert PDFs in application figures
+find intermediates/Figures/Application/ -type f -iname "*.pdf" -exec sh -c '
   for f do
     out="${f%.pdf}.png"
     gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pngalpha -r600 -o "$out" "$f" >/dev/null 2>&1
