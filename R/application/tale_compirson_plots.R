@@ -134,6 +134,7 @@ observed_data <- cbind(real1, real2)
 
 ## Simulate data under estimated parameters
 n2 <- ncol(mat_11_23_scaled) # 2166 obs
+estimates <- c(1.1188870,  1.3769174,  0.1953660,  4.0885365, 20.9920100,  0.2361101) 
 sample22 <- rXY(n2,
                 estimates[1:3],
                 c(estimates[4],estimates[4]),
