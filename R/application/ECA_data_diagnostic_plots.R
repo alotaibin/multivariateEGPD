@@ -52,6 +52,13 @@ sample22 <- rXY(n2,
 ssX2 <- sample22$XY[,1]
 ssY2 <- sample22$XY[,2]
 
+### pair-plots: real data vs simulated
+png("intermediates/Figures/Application/scatterplot_pair11_23.png", width=7, height=5, units="in", res=300)
+par(mfrow=c(1,1))
+plot(ssX2,ssY2, xlab="AMMERZODEN", ylab="ZALTBOMMEL", pch=20, cex=.9)
+points(mat_11_23_scaled[1,],mat_11_23_scaled[2,] ,pch=20, cex=.9, col="red")
+dev.off()
+
 ###############################################################
 ## 4. χ(u) and χ(l) measures with bootstrap CIs
 ###############################################################
@@ -105,7 +112,7 @@ PW.CB.u <- envelope(mat=t(Boot.CI.u), level=c(0.95,0.95), index=1:length(U))
 PW.CB.l <- envelope(mat=t(Boot.CI.l), level=c(0.95,0.95), index=1:length(L))
 
 # Plot χ(u), χ(l)
-png("Figures/Application/chi_measures_pair11_23.png", width=7, height=5, units="in", res=300)
+png("intermediates/Figures/Application/chi_measures_pair11_23.png", width=7, height=5, units="in", res=300)
 par(mfrow=c(1,2))
 plot(U, chi.U, type="l", col="red", ylim=c(0,1),
      xlab="Threshold u", ylab=expression(chi(u)))
@@ -136,9 +143,8 @@ QQbootstrapping <- function(iter, m, data){
   res
 }
 
-
 n2 <- ncol(mat_11_23_scaled)
-QQboot <- QQbootstrapping(1000, n2, data=cbind(ssX2,ssY2,ssX2+ssY2))
+QQboot <- QQbootstrapping(iter, n2, data=cbind(ssX2,ssY2,ssX2+ssY2))
 
 QQBoot.CI.X <- sapply(QQboot, function(x) x[,1])
 QQBoot.CI.Y <- sapply(QQboot, function(x) x[,2])
@@ -149,7 +155,7 @@ PW.CB.y <- envelope(mat=t(QQBoot.CI.Y), level=c(0.95,0.95), index=1:nrow(QQBoot.
 PW.CB.xy <- envelope(mat=t(QQBoot.CI.XY), level=c(0.95,0.95), index=1:nrow(QQBoot.CI.XY))
 
 # QQ plots
-png("Figures/Application/qq_plots_pair11_23.png", width=9, height=4, units="in", res=300)
+png("intermediates/Figures/Application/qq_plots_pair11_23.png", width=9, height=4, units="in", res=300)
 par(mfrow=c(1,3))
 plot(sort(mat_11_23_scaled[1,]), rowMeans(QQBoot.CI.X),
      xlab="Simulated X", ylab="Observed (Ammerzoden)")
@@ -167,5 +173,5 @@ abline(0,1,col="gray"); lines(sort(mat_11_23_scaled[1,]+mat_11_23_scaled[2,]), P
 lines(sort(mat_11_23_scaled[1,]+mat_11_23_scaled[2,]), PW.CB.xy$point[2,], lty=2, col="gray")
 dev.off()
 
-message("Diagnostics for pair 11–23 completed. Plots saved in Figures/Application/")
+message("Diagnostics for pair 11–23 completed. Plots saved in intermediates/Figures/Application/")
 
