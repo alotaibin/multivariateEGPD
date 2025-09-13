@@ -114,8 +114,8 @@ Boot.CI.l <- sapply(boot_res, function(x) x[,2])
 Boot.CI.u <- Boot.CI.u[-101, , drop=FALSE] 
 Boot.CI.l <- Boot.CI.l[-c(1,2), , drop = FALSE]
                     
-PW.CB.u <- envelope(mat=t(Boot.CI.u), level=c(0.95,0.95), index=1:length(U))
-PW.CB.l <- envelope(mat=t(Boot.CI.l), level=c(0.95,0.95), index=1:length(L))
+PW.CB.u <- envelope(mat=t(Boot.CI.u), level=c(0.95,0.95), index=1:ncol(t(Boot.CI.u)))
+PW.CB.l <- envelope(mat=t(Boot.CI.l), level=c(0.95,0.95), index=1:ncol(t(Boot.CI.l)))
 
 # Plot χ(u), χ(l)
 png("intermediates/Figures/Application/chi_measures_pair11_23.png", width=7, height=5, units="in", res=300)
