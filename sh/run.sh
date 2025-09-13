@@ -31,7 +31,7 @@ Rscript R/simulations/Results.R
 ###############################################################################
 Rscript R/data/Process_ecad_rainfall_data.R
 Rscript R/application/ECA_data_diagnostic_plots.R
-Rscript R/application/tale_compirson_plots.R   
+Rscript R/application/tale_compirson_plots.R
 
 ###############################################################################
 # Clean-up and conversion
@@ -41,7 +41,7 @@ Rscript R/application/tale_compirson_plots.R
 find . -type f -name "network_epoch*" -exec rm {} +
 
 # Convert PDFs to PNGs for simulation figures
-find img/ -type f -iname "*.pdf" -exec sh -c '
+find intermediates/Figures/Simulation/ -type f -iname "*.pdf" -exec sh -c '
   for f do
     out="${f%.pdf}.png"
     gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pngalpha -r600 -o "$out" "$f" >/dev/null 2>&1
