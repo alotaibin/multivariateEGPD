@@ -106,21 +106,28 @@ parameter_names <- rownames(theta_test)
 assessment <- assess(list(NBE, NPE), theta_test, Z_test, estimator_names = c("NBE", "NPE"), parameter_names = parameter_names)
 assessment$estimates$truth <- exp(assessment$estimates$truth)
 assessment$estimates$estimate <- exp(assessment$estimates$estimate)
+
+## Save figures into intermediates/Figures/Simulation
+fig_path <- file.path("intermediates", "Figures", "Simulation")
+dir.create(fig_path, recursive = TRUE, showWarnings = FALSE)
+
 ggsave(
   plot = plotestimates(assessment), 
   file = "Neural_assessment1.pdf", 
-  path = "Figures", device = "pdf", width = 18, height = 4
+  path = fig_path, device = "pdf", width = 18, height = 4
 )
+
 assessment_NBE <- assess(NBE, theta_test, Z_test, estimator_names = "NBE", parameter_names = parameter_names)
 assessment_NPE <- assess(NPE, theta_test, Z_test, estimator_names = "NPE", parameter_names = parameter_names)
 assessment_NBE$estimates$estimate <- exp(assessment_NBE$estimates$estimate)
 assessment_NBE$estimates$truth <- exp(assessment_NBE$estimates$truth)
 assessment_NPE$estimates$estimate <- exp(assessment_NPE$estimates$estimate)
 assessment_NPE$estimates$truth <- exp(assessment_NPE$estimates$truth)
+
 ggsave(
   plot = ggpubr::ggarrange(plotestimates(assessment_NBE), plotestimates(assessment_NPE), nrow = 2), 
   file = "Neural_assessment2.pdf", 
-  path = "Figures", device = "pdf", width = 18, height = 6
+  path = fig_path, device = "pdf", width = 18, height = 6
 )
  
 # Inference over the test set (NBE)
