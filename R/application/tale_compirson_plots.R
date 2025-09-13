@@ -228,9 +228,24 @@ mtext("Sample Quantiles", side=2, outer=TRUE, line=2.5, cex=.8)
 
 # Legend
 par(xpd = NA)
-legend("right", legend = set_labels, col = colors, pch = 20, bty = "n", cex = 0.8)
-
+legend(
+  x      = grconvertX(1.1, from = "npc", to = "user") + 0.05 * diff(par("usr")[1:2]),
+  y      = grconvertY(1.2, from = "npc", to = "user"),
+  legend = set_labels,
+  col    = legend_cols,
+  pch    = 20,
+  bty    = "n",
+  cex    = 0.8
+)
 # Save plot
 dir.create("Figures/Application", showWarnings = FALSE, recursive = TRUE)
 png("Figures/Application/qq_panels_11_23.png", width=8, height=6, units="in", res=300)
+
+# -------------- ALL YOUR PLOTTING CODE HERE ----------------
+par(mfrow = c(2,3), oma = c(5,5,4,8), mar = c(2,2,1,1), xpd = FALSE)
+# draw_panel(...) x6
+# mtext(...)
+# legend(...)
+# -----------------------------------------------------------
+
 dev.off()
